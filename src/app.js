@@ -10,6 +10,7 @@ const cors    = require('cors')
 //Rutas
 const mainRoutes        = require('./Routes/mainRoutes');
 const tareasRoutes       = require('./Routes/tareas/tareasRoutes');
+const menuRoutes       = require('./Routes/menuRoutes');
 
 //Middleware de Session
 //const userLoggedMiddleware = require('./src/middlewares/userLoggedMiddleware');
@@ -38,10 +39,11 @@ app.use(methodOverride('_method'));
 // Routes
 app.use('/', mainRoutes) ;
 app.use('/tareas', tareasRoutes) ;
+app.use('/menu', menuRoutes) ;
 
 app.use((req,res,next)=>{res.status(404).render('not-found')});
 
 // Server
 app.listen(port || 8000, () => {
-    console.log('dashapp backend '+ port);
+    console.log('msayuda backend '+ port);
 });
