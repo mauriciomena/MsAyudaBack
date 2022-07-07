@@ -6,7 +6,7 @@ const menuController = require('../Controllers/menuController')
 
 // Rutas
 router.get("/", menuController.list);
-//router.get("/:id", menuController.opcion);
+router.get("/:id", menuController.findOption);
 
 
 module.exports = router;

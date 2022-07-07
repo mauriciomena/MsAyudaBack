@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-
+      //Menu.belongsToMany( models.MsAyuda, { through: models.MsAyudaMenu });
       // // hasOne associations
       // Menus.hasOne(models.OrderDetail, {
       //   as: 'orderdetails',
@@ -28,6 +28,8 @@ module.exports = (sequelize, DataTypes) => {
       //   as:"categories",
       //   foreignKey: "categories_id"
       // })
+
+      
 
     }
   }
