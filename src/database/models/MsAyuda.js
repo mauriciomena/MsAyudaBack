@@ -17,11 +17,11 @@ module.exports = (sequelize, DataTypes) => {
       //   foreignKey: 'products_id'
       // })
 
-      // // hasMany associations
-      // Product.hasMany(models.Image,{
-      //   as:"images",
-      //   foreignKey:"products_id"
-      // })
+      // hasMany associations
+      MsAyuda.hasMany(models.MsAyudaValoresPosibles,{
+        as:"valoresPosibles",
+        foreignKey:"id_ayuda"
+      })
 
       // belongsTo associations
       // MsAyuda.belongsTo(models.MsAyudaMenu,{

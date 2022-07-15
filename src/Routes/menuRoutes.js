@@ -7,6 +7,7 @@ const menuController = require('../Controllers/menuController')
 // Rutas
 router.get("/", menuController.list);
 router.get("/:id", menuController.findOption);
+router.get("/evento/:id", menuController.getValores);
 
 
 module.exports = router;
