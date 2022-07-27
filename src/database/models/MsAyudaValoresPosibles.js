@@ -35,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     { id_ayuda: DataTypes.NUMERIC,
       valor: DataTypes.STRING,
 		denominacion_valor: DataTypes.STRING,
+    imagen: DataTypes.STRING,
     },
     {
       sequelize,

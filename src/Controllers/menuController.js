@@ -91,6 +91,30 @@ module.exports = {
           detail : 'Error interno en la peticion de la información'
         })
       }
+    },
+
+    upImagenValoresPosibles: async (req, res) => {
+      try {
+        const resultEditValidation = validationResult(req);
+
+
+        if (resultEditValidation.errors.length > 0) {
+          return res.json({
+            errors: resultEditValidation.mapped(),
+            oldData: req.body
+          })
+        } else {
+
+          db.MsAyudaValoresPosibles.update({ imagen: req.file.filename }, {
+            where: {
+              id: req.body.id
+            }
+          })
+        }
+
+      } catch (error) {
+        res.json(error);
+      }
+
     }
-    
   };
