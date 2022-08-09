@@ -73,6 +73,17 @@ module.exports = {
 
         Promise.all(([valoresPosibles,evento]))
           .then(([data,dataevento])=>{
+            let datavalor = []
+            data.map(val=>{
+                datavalor.push({
+                  id: val.id,
+                  id_ayuda: val.id_ayuda,
+                  valor: val.valor,
+                  denominacion_valor: val.denominacion_valor,
+                  imgurl:`http://${req.headers.host}/images/${val.imagen}` 
+                 })                 
+            });
+
           res.json({
             meta:{
               status: 200,
@@ -80,7 +91,7 @@ module.exports = {
               url : `http://${req.headers.host}/menu/evento/${req.params.id}`
             },
             evento: dataevento,
-            data: data
+            data: datavalor
             })
         })
         
