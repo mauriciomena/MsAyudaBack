@@ -20,6 +20,5 @@ module.exports = [
         }
         // Siempre en las validaciones custom retorno true
         return true;
-    }),
-    body('facts').notEmpty().withMessage('Completá la nutrición')
+    })
 ]

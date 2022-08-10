@@ -13,7 +13,7 @@ router.get("/", menuController.list);
 router.get("/:id", menuController.findOption);
 router.get("/evento/:id", menuController.getValores);
 // Guarda el nuevo producto Create (productCart.html)
-router.post('/upfilevaloresposibles/:id', uploadFileProducts.single('imagen'), formValidationsImages, menuController.upImagenValoresPosibles);
+router.post('/upfilevaloresposibles', uploadFileProducts.single('imagen'), formValidationsImages, menuController.upImagenValoresPosibles);
 
 
 

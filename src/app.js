@@ -24,7 +24,7 @@ const menuRoutes       = require('./Routes/menuRoutes');
 
 app.use(express.static('public'));
 app.set('view engine','ejs');
-app.set('views', __dirname + '/src/views');
+//app.set('views', __dirname + '/src/views');
 
 app.use(cors());
 // URL encode para capturar informacion del formulario en req.body
@@ -41,7 +41,7 @@ app.use('/', mainRoutes) ;
 app.use('/tareas', tareasRoutes) ;
 app.use('/menu', menuRoutes) ;
 
-app.use((req,res,next)=>{res.status(404).render('not-found')});
+//app.use((req,res,next)=>{res.status(404).render('not-found')});
 
 // Server
 app.listen(port || 8000, () => {

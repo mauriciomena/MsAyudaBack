@@ -1,6 +1,6 @@
-const { promiseImpl } = require('ejs');
 let db = require('../database/models');
 const Op = db.Sequelize.Op;
+const {	validationResult } = require('express-validator');
 
 module.exports = {
 
@@ -74,21 +74,24 @@ module.exports = {
         Promise.all(([valoresPosibles,evento]))
           .then(([data,dataevento])=>{
             let datavalor = []
+
+
             data.map(val=>{
                 datavalor.push({
                   id: val.id,
                   id_ayuda: val.id_ayuda,
                   valor: val.valor,
                   denominacion_valor: val.denominacion_valor,
-                  imgurl:`http://${req.headers.host}/images/${val.imagen}` 
+                  imgurl:  val.imagen ? `http://${req.headers.host}/images/${val.imagen}` :''
                  })                 
             });
 
+          console.log(datavalor);
           res.json({
+            
             meta:{
               status: 200,
-              total : data.length,
-              url : `http://${req.headers.host}/menu/evento/${req.params.id}`
+              total : datavalor.length
             },
             evento: dataevento,
             data: datavalor
@@ -105,24 +108,27 @@ module.exports = {
     },
 
     upImagenValoresPosibles: async (req, res) => {
+      console.log('update id',req.body.id);
       try {
         const resultEditValidation = validationResult(req);
-
-
         if (resultEditValidation.errors.length > 0) {
           return res.json({
             errors: resultEditValidation.mapped(),
             oldData: req.body
           })
         } else {
-
+          
           db.MsAyudaValoresPosibles.update({ imagen: req.file.filename }, {
             where: {
               id: req.body.id
             }
           })
+          return res.json({
+            errors:{
+              msg: 'imagen actualizada'
+            }
+          })
         }
-
       } catch (error) {
         res.json(error);
       }
