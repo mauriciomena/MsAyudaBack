@@ -58,6 +58,47 @@ module.exports = {
         })
       }
     },
+    findEventos: async (req,res)=>{
+
+      //lista de eventos
+      console.log('------------------------------ findeventos ------------------------------');
+      console.log(req.params.bus);
+      try {
+        
+        //const datoMenu = await db.Menu.findByPk(req.params.id);
+        //const buscar = req.params.buscar       
+
+        const eventos = await db.MsAyuda.findAll( {
+            where: {
+              denominacion: {
+                [Op.like]: '%'+req.params.bus
+              }
+            }
+          })
+
+        Promise.all(([eventos]))
+          .then(([data])=>{
+            res.json({
+              meta:{
+                status: 200,
+                total : data.length,
+                url : `http://${req.headers.host}/menu/${req.params.id}`
+              },
+              data: data
+              })
+
+        })
+
+        
+      } catch (error) {
+        
+        console.log(error);
+        res.json({
+          status : 500,
+          detail : 'Error interno en la peticion de la información'
+        })
+      }
+    },
     getValores: async (req,res)=>{
       //lista de valores de eventos
       try {
@@ -132,6 +173,52 @@ module.exports = {
       } catch (error) {
         res.json(error);
       }
-
+    },
+    addDocumentos: async (req, res) => {
+      
+      try {
+        const resultEditValidation = validationResult(req);
+        if (resultEditValidation.errors.length > 0) {
+          return res.json({
+            errors: resultEditValidation.mapped(),
+            oldData: req.body
+          })
+        } else {
+          let doc = await db.MsAyuda.create({
+              tipo: 'INT',
+              denominacion: req.body.titulo,
+              destalle:req.body.descripcion,
+              etiquetas:req.body.etiquetas,
+            })
+                    
+          let arc = await db.Archivos.create({
+           nombre: req.file.filename ,
+           extension: '.pdf'
+          })
+          let rel = await db.MsAyudaArchivos.create({
+            id_ayuda: doc.id,
+            id_archivo: arc.id,
+           })
+           
+          if (rel.id > 0 ){
+            return res.json({
+              errors:{
+                msg: 'imagen actualizada'
+              }
+            })
+          } else{
+            return res.json({
+              errors:{
+                msg: 'Ocurrió un error al grabar el archivo'
+              }
+            })
+          }
+        }
+      } catch (error) {
+        res.json(error);
+      }
+    },
+    listDocumentos: async (req, res) => {
+      
     }
   };

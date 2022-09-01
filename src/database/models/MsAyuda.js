@@ -23,6 +23,14 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey:"id_ayuda"
       })
 
+      MsAyuda.belongsToMany(models.Archivos,{
+        as: "archivos",
+        through: "ms_ayuda_archivos",
+        foreignKey:"id_ayuda",
+        otherKey:"id_archivo",
+        timestamps:"false"
+      })
+
       // belongsTo associations
       // MsAyuda.belongsTo(models.MsAyudaMenu,{
       //   as:"msayudamenu",
