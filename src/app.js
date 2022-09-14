@@ -3,9 +3,12 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT;
 const methodOverride = require('method-override');
-// const session = require('express-session');
-// const cookies = require('cookie-parser');
+const bodyParser = require('body-parser');
 const cors    = require('cors')
+
+
+app.use(bodyParser.json());
+
 
 //Rutas
 const mainRoutes        = require('./Routes/mainRoutes');

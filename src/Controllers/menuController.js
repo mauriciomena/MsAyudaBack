@@ -33,9 +33,10 @@ module.exports = {
               ]
             }
           })
-
+        
         Promise.all(([datoMenu,eventos]))
           .then(([datamMenu,data])=>{
+            
             res.json({
               meta:{
                 status: 200,
@@ -58,6 +59,60 @@ module.exports = {
         })
       }
     },
+
+    listTreeMenu: (req, res) => {  
+      
+       //lista de eventos
+       console.log('------------------------------ listTreeMenu ------------------------------');
+      //  buscador con LIKE para cuando se ponga lento
+      //  db.Vw_menu.findAll({
+      //   where: { opcion: { [Op.like]: '%' + req.body.busco + '%' } },
+      //   offset: 10,
+      //   limit: 10
+      // }
+
+        db.Vw_menu.findAll()
+          .then((menu) => {
+            //res.render("products/productList.ejs", { products });
+            //res.json(menu)
+            res.json({
+              meta:{
+                status: 200,
+                total : menu.length,
+                url : `http://${req.headers.host}/menu`
+              },
+              data: menu
+          })          
+        }).catch((error) => res.send(error));
+    },
+    vinculaDocConMenu: async (req,res)=>{
+
+      console.log('-----------------------vinculaDocConMenu------------------------');
+      
+     console.log(req.body);
+      try {
+        let vinc = await db.MsAyudaMenu.create({
+          id: req.body.idAyuda,
+          id_menu: req.body.idOpcion
+        })
+        res.json({
+          meta:{
+            status: 200,
+            total : vinc.length,
+          },
+          data: vinc   })   
+        
+      } catch (error) {
+         
+        console.log(error);
+        res.json({
+          status : 500,
+          detail : 'Error interno en la peticion de la información'
+        })
+      }  
+      console.log('-----------------------vinculaDocConMenu------------------------');
+    },
+    
     findEventos: async (req,res)=>{
 
       //lista de eventos
@@ -110,13 +165,11 @@ module.exports = {
             }
           });
 
-        const evento = await db.MsAyuda.findByPk(req.params.id ) ;
-
+        const evento    = await db.MsAyuda.findByPk(req.params.id ) ;
+        
         Promise.all(([valoresPosibles,evento]))
           .then(([data,dataevento])=>{
             let datavalor = []
-
-
             data.map(val=>{
                 datavalor.push({
                   id: val.id,
@@ -185,7 +238,7 @@ module.exports = {
           })
         } else {
           let doc = await db.MsAyuda.create({
-              tipo: 'INT',
+              tipo: req.body.tipo,
               denominacion: req.body.titulo,
               destalle:req.body.descripcion,
               etiquetas:req.body.etiquetas,
@@ -203,7 +256,14 @@ module.exports = {
           if (rel.id > 0 ){
             return res.json({
               errors:{
-                msg: 'imagen actualizada'
+                msg: 'imagen actualizada',               
+                documento: {
+                  id: doc.id,
+                  denominacion: doc.denominacion, 
+                  destalle:doc.destalle,
+                  etiquetas:doc.etiquetas,
+                  archivo:`http://${req.headers.host}/files/${arc.nombre}`
+                }
               }
             })
           } else{
