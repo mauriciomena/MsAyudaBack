@@ -11,7 +11,7 @@ const formAddDocumentsMiddleware = require('../middlewares/formAddDocumentsMiddl
 
 
 // Rutas
-router.get("/buscar", menuController.findEventos);
+router.post("/buscar", menuController.findEventos);
 router.get("/buscomenu", menuController.listTreeMenu);
 router.get("/", menuController.list);
 router.get("/:id", menuController.findOption);

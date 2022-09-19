@@ -117,7 +117,7 @@ module.exports = {
 
       //lista de eventos
       console.log('------------------------------ findeventos ------------------------------');
-      console.log(req.params.bus);
+      console.log(req.body);
       try {
         
         //const datoMenu = await db.Menu.findByPk(req.params.id);
@@ -126,9 +126,10 @@ module.exports = {
         const eventos = await db.MsAyuda.findAll( {
             where: {
               denominacion: {
-                [Op.like]: '%'+req.params.bus
+                [Op.like]: '%'+req.body.buscar+'%'
               }
-            }
+            },
+            limit: 20
           })
 
         Promise.all(([eventos]))
