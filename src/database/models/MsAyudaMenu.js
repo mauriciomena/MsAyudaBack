@@ -29,6 +29,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey:"id"
       })
 
+      // hasMany associations
+      MsAyudaMenu.belongsTo(models.Vw_menu,{
+        as:"vw_menu",
+        foreignKey:"id_menu"
+      })
+
       // // belongsTo associations
       // Product.belongsTo(models.Category,{
       //   as:"categories",

@@ -166,10 +166,27 @@ module.exports = {
             }
           });
 
-        const evento    = await db.MsAyuda.findByPk(req.params.id ) ;
+        const evento    = await db.MsAyuda.findAll( {
+          include :['archivos'],
+            where: {
+              [Op.and]: [
+                { id: req.params.id}
+              ]
+            }
+          })
+
+        const opcMenu  = await db.MsAyudaMenu.findAll( {
+          include :['vw_menu'],
+            where: {
+              [Op.and]: [
+                { id: req.params.id}
+              ]
+            }
+          })
         
-        Promise.all(([valoresPosibles,evento]))
-          .then(([data,dataevento])=>{
+        
+        Promise.all(([valoresPosibles,evento,opcMenu]))
+          .then(([data,dataevento,opcionesMenu])=>{
             let datavalor = []
             data.map(val=>{
                 datavalor.push({
@@ -181,14 +198,25 @@ module.exports = {
                  })                 
             });
 
-          console.log(datavalor);
+          let ayuda = {
+            id: dataevento[0].id,
+            denominacion: dataevento[0].denominacion,
+            destalle: dataevento[0].destalle ,
+            etiquetas: dataevento[0].etiquetas,
+            palabra_clave: dataevento[0].palabra_clave,
+            tipo: dataevento[0].tipo,
+            imgurl: dataevento[0].archivos[0]? `http://${req.headers.host}/files/${dataevento[0].archivos[0].nombre}` :'',
+            opciones: opcionesMenu
+            
+
+          }
           res.json({
             
             meta:{
               status: 200,
               total : datavalor.length
             },
-            evento: dataevento,
+            evento: ayuda,
             data: datavalor
             })
         })
