@@ -155,6 +155,46 @@ module.exports = {
         })
       }
     },
+    catalog: async (req,res)=>{
+
+      //lista de eventos
+      console.log('------------------------------ catalog ------------------------------');
+      console.log(req.body);
+      try {
+        
+        //const datoMenu = await db.Menu.findByPk(req.params.id);
+        //const buscar = req.params.buscar       
+
+        const eventos = await db.MsAyuda.findAll( {
+            limit: 35,
+            order: [
+              ['id', 'DESC'],
+            ]
+          })
+
+        Promise.all(([eventos]))
+          .then(([data])=>{
+            res.json({
+              meta:{
+                status: 200,
+                total : data.length,
+                url : `http://${req.headers.host}/menu/${req.params.id}`
+              },
+              data: data
+              })
+
+        })
+
+        
+      } catch (error) {
+        
+        console.log(error);
+        res.json({
+          status : 500,
+          detail : 'Error interno en la peticion de la información'
+        })
+      }
+    },
     getValores: async (req,res)=>{
       //lista de valores de eventos
       try {
@@ -197,7 +237,7 @@ module.exports = {
                   imgurl:  val.imagen ? `http://${req.headers.host}/images/${val.imagen}` :''
                  })                 
             });
-
+            
           let ayuda = {
             id: dataevento[0].id,
             denominacion: dataevento[0].denominacion,
@@ -257,8 +297,35 @@ module.exports = {
       }
     },
     addDocumentos: async (req, res) => {
+
       
       try {
+        
+        function formatoFecha(fecha, formato) {
+          const map = {
+              dd: fecha.getDate(),
+              mm: fecha.getMonth() + 1,
+              yy: fecha.getFullYear().toString().slice(-2),
+              yyyy: fecha.getFullYear()
+          }
+      
+          return formato.replace(/dd|mm|yy|yyy/gi, matched => map[matched])
+      }
+      
+
+        let  fecha = new Date();
+        let unaFecha  = formatoFecha(fecha,'yyyy-mm-dd')
+        console.log('unaFecha',unaFecha);
+        const añoActual = fecha.getFullYear();
+        const hoy = fecha.getDate();
+        const mesActual = fecha.getMonth() + 1; 
+        console.log('fecha',fecha);
+        console.log('añoActual',añoActual);
+        console.log('hoy',hoy);
+        console.log('mesActual', mesActual);
+
+        fecha = new Date(añoActual+'-'+mesActual+'-'+hoy);
+
         const resultEditValidation = validationResult(req);
         if (resultEditValidation.errors.length > 0) {
           return res.json({
@@ -270,7 +337,7 @@ module.exports = {
               tipo: req.body.tipo,
               denominacion: req.body.titulo,
               destalle:req.body.descripcion,
-              etiquetas:req.body.etiquetas,
+              etiquetas:req.body.etiquetas
             })
                     
           let arc = await db.Archivos.create({
@@ -304,10 +371,24 @@ module.exports = {
           }
         }
       } catch (error) {
-        res.json(error);
+        console.log(error);
+        res.json({
+          errors: {
+            status : 500,
+            detail : 'Error interno en la peticion de la información',
+            msg: 'Error al grabar en el servidor'
+          }
+          
+        })
       }
     },
     listDocumentos: async (req, res) => {
       
+    },
+    delayuda : async (req,res) => {
+      //asi hay que buscar para elminar
+//       select * from ms_ayuda where id = 158889 ;
+// select * from ms_ayuda_menu_general where id = 158889 ;
+// select * from ms_ayuda_archivos where id_ayuda = 158889 ;
     }
   };
