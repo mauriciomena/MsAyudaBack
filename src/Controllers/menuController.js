@@ -123,14 +123,44 @@ module.exports = {
         //const datoMenu = await db.Menu.findByPk(req.params.id);
         //const buscar = req.params.buscar       
 
-        const eventos = await db.MsAyuda.findAll( {
-            where: {
-              denominacion: {
-                [Op.like]: '%'+req.body.buscar+'%'
-              }
-            },
-            limit: 20
-          })
+        // const eventos = await db.MsAyuda.findAll( {
+        //     where: {
+        //       denominacion: {
+        //         [Op.like]: '%'+req.body.buscar+'%'
+        //       }
+        //     },
+        //     limit: 20
+        //   })
+
+
+        const eventos = await db.MsAyuda.findAll({
+          where: {
+            [Op.or]: [
+              {
+                denominacion: {
+                  [Op.like]: '%' + req.body.buscar + '%'
+                }
+              },
+              {
+                destalle: {
+                  [Op.like]: '%' + req.body.buscar + '%'
+                }
+              },
+              {
+                etiquetas: {
+                  [Op.like]: '%' + req.body.buscar + '%'
+                }
+              },
+              {
+                palabra_clave: {
+                  [Op.like]: '%' + req.body.buscar + '%'
+                }
+              },
+            ]
+          },
+          limit: 20
+        })
+           
 
         Promise.all(([eventos]))
           .then(([data])=>{
@@ -385,7 +415,54 @@ module.exports = {
     listDocumentos: async (req, res) => {
       
     },
-    delayuda : async (req,res) => {
+    detete : async (req,res) => {
+      // try {
+
+      //   let doc = await db.MsAyuda.create({
+      //     tipo: req.body.tipo,
+      //     denominacion: req.body.titulo,
+      //     destalle:req.body.descripcion,
+      //     etiquetas:req.body.etiquetas
+      //   })
+                
+      // let arc = await db.Archivos.create({
+      //  nombre: req.file.filename ,
+      //  extension: '.pdf'
+      // })
+
+      
+      // let rel = await db.MsAyudaArchivos.destroy({
+      //   where: {
+      //     firstName: "Jane"
+      //   }
+      // })
+
+      // let arc = await db.Archivos.destroy({
+      //   where: {
+      //     firstName: "Jane"
+      //   }
+      // })
+
+
+      //   await User.destroy({
+      //     where: {
+      //       firstName: "Jane"
+      //     }
+      //   });
+        
+      // } catch (error) {
+      //   res.json({
+      //     errors: {
+      //       status : 500,
+      //       detail : 'Error interno en la peticion de la información',
+      //       msg: 'Error al grabar en el servidor'
+      //     }
+          
+      //   })
+      // }
+
+      
+
       //asi hay que buscar para elminar
 //       select * from ms_ayuda where id = 158889 ;
 // select * from ms_ayuda_menu_general where id = 158889 ;
