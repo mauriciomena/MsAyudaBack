@@ -374,33 +374,51 @@ module.exports = {
             oldData: req.body
           })
         } else {
+          let file = ''
+          if (req.file) {
+            file =  req.file.filename
+          }
           
+
           if (req.body.id > 0 ){
-           
-            db.MsAyudaValoresPosibles.update({
-              id_ayuda: req.body.id_ayuda,
-              valor: req.body.valor,
-              denominacion_valor: req.body.denominacion_valor,
-              imagen: req.file.filename
-            }, {
-              where: {
-                id: req.body.id
-              }
-            }).then(() => {
-              
-              return res.json({
-                errors: {
-                  msg: 'Actualizado con éxito'
-                }
-              })
-    
-            })
-          } else{
-            console.log('paso');
-            let file = ''
             if (req.file) {
-              file =  req.file.filename
+              db.MsAyudaValoresPosibles.update({
+                id_ayuda: req.body.id_ayuda,
+                valor: req.body.valor,
+                denominacion_valor: req.body.denominacion_valor,
+                imagen: file
+              }, {
+                where: {
+                  id: req.body.id
+                }
+              }).then(() => {
+                
+                return res.json({
+                  errors: {
+                    msg: 'Actualizado con éxito'
+                  }
+                })
+      
+              })
+            } else{
+              db.MsAyudaValoresPosibles.update({
+                id_ayuda: req.body.id_ayuda,
+                valor: req.body.valor,
+                denominacion_valor: req.body.denominacion_valor
+              }, {
+                where: {
+                  id: req.body.id
+                }
+              }).then(() => {
+                
+                return res.json({
+                  errors: {
+                    msg: 'Actualizado con éxito'
+                  }
+                })
+              })
             }
+          } else{
             
             db.MsAyudaValoresPosibles.create({
               id_ayuda: req.body.id_ayuda,
