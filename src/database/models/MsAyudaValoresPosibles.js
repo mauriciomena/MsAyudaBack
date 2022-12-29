@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
   MsAyudaValoresPosibles.init(
     { id_ayuda: DataTypes.NUMERIC,
       valor: DataTypes.STRING,
-		denominacion_valor: DataTypes.STRING,
+		  denominacion_valor: DataTypes.STRING,
     imagen: DataTypes.STRING,
     },
     {

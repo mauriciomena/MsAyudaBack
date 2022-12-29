@@ -9,9 +9,12 @@ module.exports = [
 
         // Defino que extensiones son válidas
         let acceptedExtensions = ['.pdf'];
-        
-        if (!file) {
-            throw new Error('solo se admiten documentos en pdf');
+
+        //if (!file ) {         -- 15-12-2022 exceptua la validacion cuando es un evento
+
+        if (!file && req.body.tipo != 'EVE') {
+
+            throw new Error('Debe cargar una imagen');
         } else {
             let fileExtension = path.extname(file.originalname);
             if (!acceptedExtensions.includes(fileExtension)) {

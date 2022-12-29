@@ -5,6 +5,7 @@ const {	validationResult } = require('express-validator');
 module.exports = {
 
     list: (req, res) => {   
+      console.log('------------------------------ list ------------------------------');
       //Lista de Menu completo
         db.Menu.findAll()
           .then((menu) => {
@@ -21,6 +22,7 @@ module.exports = {
         }).catch((error) => res.send(error));
     },
     findOption: async (req,res)=>{
+      console.log('------------------------------ findOption ------------------------------');
       //lista de eventos
       try {
 
@@ -186,7 +188,7 @@ module.exports = {
       }
     },
     catalog: async (req,res)=>{
-
+      
       //lista de eventos
       console.log('------------------------------ catalog ------------------------------');
       console.log(req.body);
@@ -226,6 +228,7 @@ module.exports = {
       }
     },
     getValores: async (req,res)=>{
+      console.log('---------------getValores----------------');
       //lista de valores de eventos
       try {
         const valoresPosibles = await db.MsAyudaValoresPosibles.findAll( {
@@ -301,6 +304,7 @@ module.exports = {
     },
 
     upImagenValoresPosibles: async (req, res) => {
+      console.log('---------------upImagenValoresPosibles----------------');
       console.log('update id',req.body.id);
       try {
         const resultEditValidation = validationResult(req);
@@ -326,8 +330,108 @@ module.exports = {
         res.json(error);
       }
     },
-    addDocumentos: async (req, res) => {
+    deleteValorPosible: async (req,res) =>{
+      console.log('---------------deleteValorPosible----------------');
+      try {
+        if (req.body.id > 0 ){
+           
+          db.MsAyudaValoresPosibles.destroy( {
+            where: {
+              id: req.body.id
+            }
+          }).then(() => {
+            return res.json({
+              errors: { 
+                msg: 'Eliminado con Exito'
+              }
+            })
+          })
+          
+        };
+        
+      }  catch (error) {
+        console.log(error);
+        res.json({
+          errors: {
+            status : 500,
+            detail : 'Error interno en la peticion de la información',
+            msg: 'Error al grabar en el servidor'
+          }
+          
+        })
+      }
 
+    },
+    addValorPosible: async (req, res) => {
+      console.log('---------------addvalorposible----------------');
+      try {
+        const resultEditValidation = validationResult(req);
+        
+        if (resultEditValidation.errors.length > 0) {
+          
+          return res.json({
+            errors: resultEditValidation.mapped(),
+            oldData: req.body
+          })
+        } else {
+          
+          if (req.body.id > 0 ){
+           
+            db.MsAyudaValoresPosibles.update({
+              id_ayuda: req.body.id_ayuda,
+              valor: req.body.valor,
+              denominacion_valor: req.body.denominacion_valor,
+              imagen: req.file.filename
+            }, {
+              where: {
+                id: req.body.id
+              }
+            }).then(() => {
+              
+              return res.json({
+                errors: {
+                  msg: 'Actualizado con éxito'
+                }
+              })
+    
+            })
+          } else{
+            console.log('paso');
+            let file = ''
+            if (req.file) {
+              file =  req.file.filename
+            }
+            
+            db.MsAyudaValoresPosibles.create({
+              id_ayuda: req.body.id_ayuda,
+              valor: req.body.valor,
+              denominacion_valor: req.body.denominacion_valor,
+              imagen: file
+            }).then(() => {
+            
+              return res.json({
+                errors: {
+                  msg: 'Agregado con éxito'
+                }
+              })
+    
+            })
+            
+          
+          }
+          
+        }
+        
+      } catch (error) {
+        return res.json({
+          errors:{
+            msg: error
+          }
+        })
+      }
+     },
+    addDocumentos: async (req, res) => {
+      console.log('------------------------------ addDocumentos ------------------------------');
       
       try {
         
@@ -412,10 +516,78 @@ module.exports = {
         })
       }
     },
-    listDocumentos: async (req, res) => {
+    addEventos: async (req, res) => {
+      console.log('------------------------------ addEventos ------------------------------');
       
+      try {
+        
+        function formatoFecha(fecha, formato) {
+          const map = {
+              dd: fecha.getDate(),
+              mm: fecha.getMonth() + 1,
+              yy: fecha.getFullYear().toString().slice(-2),
+              yyyy: fecha.getFullYear()
+          }
+      
+          return formato.replace(/dd|mm|yy|yyy/gi, matched => map[matched])
+      }
+      
+
+        let  fecha = new Date();
+        let unaFecha  = formatoFecha(fecha,'yyyy-mm-dd')
+        console.log('unaFecha',unaFecha);
+        const añoActual = fecha.getFullYear();
+        const hoy = fecha.getDate();
+        const mesActual = fecha.getMonth() + 1; 
+        console.log('fecha',fecha);
+        console.log('añoActual',añoActual);
+        console.log('hoy',hoy);
+        console.log('mesActual', mesActual);
+
+        fecha = new Date(añoActual+'-'+mesActual+'-'+hoy);
+
+        const resultEditValidation = validationResult(req);
+        if (resultEditValidation.errors.length > 0) {
+          return res.json({
+            errors: resultEditValidation.mapped(),
+            oldData: req.body
+          })
+        } else {
+          
+          let evento = await db.MsAyuda.create({
+              tipo: req.body.tipo,
+              denominacion: req.body.titulo,
+              destalle:req.body.descripcion,
+              etiquetas:req.body.etiquetas
+            })
+          
+            return res.json({
+              errors: {
+                status : 200,
+                detail : 'Evento Creado con exito',
+                msg: 'Evento Creado con exito',
+                id: evento.id
+              }
+            })
+              
+        }
+      } catch (error) {
+        console.log(error);
+        res.json({
+          errors: {
+            status : 500,
+            detail : 'Error interno en la peticion de la información',
+            msg: 'Error al grabar en el servidor'
+          }
+          
+        })
+      }
+    },    
+    listDocumentos: async (req, res) => {
+      console.log('------------------------------ listDocumentos ------------------------------');  
     },
-    detete : async (req,res) => {
+    delete : async (req,res) => {
+      console.log('------------------------------ delete ------------------------------');  
       // try {
 
       //   let doc = await db.MsAyuda.create({
