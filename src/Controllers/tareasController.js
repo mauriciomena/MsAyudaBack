@@ -33,5 +33,26 @@ module.exports = {
             data: tareas
         })          
       }).catch((error) => res.send(error));
-  }
+  },
+  senasa: (req, res) => {
+    console.log(req);
+    
+    try {
+      const bodyrec =  req.body
+      const paramsrec =  req.query
+      
+      console.log(bodyrec);
+      // return res.json({bodyRecibido: JSON.stringify(bodyrec),
+      // parametrosRecibidos: JSON.stringify(paramsrec)})
+
+      res.json({
+         bodyRecibido: bodyrec,
+         parametrosRecibidos: paramsrec
+        });
+        
+      
+    } catch (error) {
+      console.log(error);
+    }   
+},
   };
