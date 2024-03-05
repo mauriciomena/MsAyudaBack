@@ -40,7 +40,7 @@ module.exports = {
     try {
       const bodyrec =  req.body
       const paramsrec =  req.query
-      
+
       console.log(bodyrec);
       // return res.json({bodyRecibido: JSON.stringify(bodyrec),
       // parametrosRecibidos: JSON.stringify(paramsrec)})
@@ -56,3 +56,12 @@ module.exports = {
     }   
 },
   };
+
+
+  // let products = [
+  //   {
+  //     id_product_code:1239,
+  //     batchId:D21WG11051,
+  //     amount:1,
+  //   }
+  // ]
